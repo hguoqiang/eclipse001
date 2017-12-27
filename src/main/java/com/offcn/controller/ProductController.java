@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,4 +78,30 @@ public class ProductController {
 		return "baicai3";
 	}
 
+	
+	// 生成PDF
+	@RequestMapping("/getPDF.action")
+	public String getPDF(HttpServletRequest request, HttpServletResponse response){
+		
+		try {
+			productService.getPDF(request,response);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "index1";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

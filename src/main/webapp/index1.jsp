@@ -23,17 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   </head>
   
   <body>
-  
-  <h3>商品查询系统</h3>
-  
-  
-  <form action="">
-  
-  
-  
-  
-  
-  </form>
-   
+  下载完毕
+ 
   </body>
 </html>

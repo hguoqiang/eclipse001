@@ -2,6 +2,9 @@ package com.offcn.service;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.offcn.pojo.Product;
 
 import net.sf.json.JSONArray;
@@ -24,6 +27,12 @@ public interface ProductService {
 
 
 		List<Double> getProductByMonthAVG2016();
+
+
+	
+
+
+		void getPDF(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 
 	

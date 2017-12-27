@@ -68,11 +68,11 @@ text-indent:2em;
 	<div id="main" style="width: 1200px; height: 300px;"></div>
 	
 	<div >
-	<p>2017年<span class="newMonth"></span>月1日，<span class="name"></span>批发平均价是<span id="avg1"></span>0.35元/斤，
+	<p>2017年<span class="newMonth"></span>月1日，<span class="name"></span>批发平均价是<span id="avg1"></span>元/斤，
 	
-	<span class="newMonth"></span>11月30日，价格是<span id="avg30"></span>9.30元/斤，月末比月初上涨<span id="avg30ToAvg1"></span>5.68%。
+	<span class="newMonth"></span>月<span class="lastDay"></span>日，价格是<span id="avg30"></span>元/斤，月末比月初<span id="avg30ToAvg1"></span>。
 	
-	月末的价格比去年同期的<span id="oldAvg30"></span>10.33元/斤下降<span id="avg30ToOldAvg30"></span>9.97%。
+	月末的价格比去年同期的<span id="oldAvg30"></span>元/斤下降<span id="avg30ToOldAvg30"></span>。
 	</p>
 
     <p>月内的最高价是9.30元/斤（11月30日），比10月份的8.98元/斤上涨3.56%；比9月份的9.15元/斤上涨1.64%；比8月份的9.45元/斤下降1.59%；比7月份的8.95元/斤上涨3.91%。</p>
@@ -85,7 +85,7 @@ text-indent:2em;
 
     <p>2017年11月份的价格比2016年同期的10.18元/斤下降12.38%；比2015年同期的10.02元/斤下降10.98%；比2014年同期的8.38元/斤上涨6.44%；比2013年同期的9.76元/斤下降8.60%。</p></div>
 
-	<div><button onclick="fun()">生成PDF文档</button></div>
+	<div><a href="getPDF.action">生成PDF文档</a></div>
 	<script type="text/javascript">
 		//初始化 echarts 实例
 		var myChart = echarts.init(document.getElementById('main'));
@@ -128,16 +128,42 @@ text-indent:2em;
 			$('.newMonth').text(((data[0].list1)[0].release_date).substr(5,2));// 给文本添加数据
 			
 			$('.name').text((data[0].list2)[0].name);
+			
+			var avg1 =(data[0].list1)[0].average_price;
+			
+			$('#avg1').text(avg1);		
+			
+			$(".lastDay").text(((data[0].list1)[((data[0].list1).length)-1].release_date).substr(8));
+			var avg30 =(data[0].list1)[((data[0].list1).length)-1].average_price;
+			
+			$('#avg30').text(avg30);	
+			
+			var avg30ToAvg1 ="";
+			if(avg30>avg1){
+			var temp =	(avg30-avg1)/avg1*100 ;		
+				avg30ToAvg1 = "上涨"+ 	temp.toFixed(2)+"%";
+				
+			}else{
+				var temp =	(avg1-avg30)/avg1*100 ;
+				avg30ToAvg1 = "下降"+ (temp.toFixed(2))+"%";
+			}
+			
+			$('#avg30ToAvg1').text(avg30ToAvg1);
+			
+			
+				var oldAvg30 =(data[0].list2)[((data[0].list1).length)-1].average_price; //2016年的
+			$("#oldAvg30").text();
+			
+				
 	
-			console.log(((data[0].list1)[0].release_date).substr(5,2));
-			console.log((data[0].list2)[0].name);
+			/* console.log((data[0].list1)[0].average_price);
+			console.log((data[0].list1)[29].average_price); */
+			
+			
 	
 			var time = new Array(); //横轴时间1-30
 	
-			for (i = 0; i < time.length; i++) {
-	
-	
-			}
+			
 	
 			var average_price2016 = new Array(); // 2016年11月份平均价
 			var average_price2017 = new Array(); // 2017年11月份平均价
@@ -162,6 +188,10 @@ text-indent:2em;
 				average_price2017.push((data[0].list2)[i].average_price);
 	
 				$('#td2017').append('<td>' + ((data[0].list2)[i].average_price) + '</td>');
+	
+			
+			
+	
 	
 			};
 	
