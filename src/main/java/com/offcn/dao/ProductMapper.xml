@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.offcn.dao.ProductMapper">
+
+	<select id="getProductByNameAndRelease_Time1" resultType="Product">
+		SELECT
+		p.id,
+		p.`name`,
+		p.min_price,
+		p.average_price,
+		p.max_price,
+		p.type,
+		p.measure_unit,
+		p.release_date
+		FROM
+		producttwo p where p.`name` = '大白菜'
+		and p.release_date BETWEEN '2017-11-01' AND
+		'2017-11-30'
+	</select>
+
+
+
+	<select id="getProductByNameAndRelease_Time2" resultType="Product">
+		SELECT
+		p.id,
+		p.`name`,
+		p.min_price,
+		p.average_price,
+		p.max_price,
+		p.type,
+		p.measure_unit,
+		p.release_date
+		FROM
+		producttwo p where p.`name` = '大白菜'
+		and p.release_date BETWEEN '2016-11-01' AND
+		'2016-11-30'
+	</select>
+
+
+
+	<!-- 2017一个整年度,每个月份的平均价值 -->
+	<select id="getProductByMonthAVG2017" resultType="QueryVo">
+
+		SELECT
+		MONTH ( p.release_date ) month,
+		AVG( p.average_price ) avg
+		FROM
+		producttwo p
+		WHERE
+		p.`name` = '大白菜' AND
+		YEAR ( p.release_date ) = 2016 -- 这里假设你要查 2010年的每月的统计。
+		GROUP BY
+		MONTH ( p.release_date )
+	</select>
+
+
+	<!-- 2016一个整年度,每个月份的平均价值 -->
+	<select id="getProductByMonthAVG2016" resultType="QueryVo">
+
+
+
+
+		SELECT
+		MONTH ( p.release_date ) month,
+		AVG( p.average_price ) avg
+		FROM
+		producttwo p
+		WHERE
+		p.`name` = '大白菜' AND
+		YEAR ( p.release_date ) = 2016 -- 这里假设你要查 2010年的每月的统计。
+		GROUP BY
+		MONTH ( p.release_date )
+	</select>
+
+
+
+
+
+
+</mapper>
