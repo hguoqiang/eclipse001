@@ -6,8 +6,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -97,29 +99,32 @@ public class ProductServiceImpl implements ProductService {
 		return list;
 	}
 
-	@Override
-	public void getPDF(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public void getPDF(HttpServletRequest request, HttpServletResponse response,ServletOutputStream servletOutputStream) throws Exception {
 
 		// 获取下载路劲
 		String path = request.getSession().getServletContext().getRealPath("/upload/");
+		System.out.println(path);
 		// 生成的 PDF 文档名称
 		String fileName = "demo.pdf";
 	
 		createPDF(path + fileName);
 		
 		File file = new File(path + fileName); // 根据文件路径获得 File 文件
+		
 		//response.setContentType("application/x-xls;charset=GBK");
 		//1.设置文件ContentType类型，这样设置，会自动判断下载文件类型   
 		  response.setContentType("multipart/form-data");   
 		// 文件名
 		response.setHeader("Content-Disposition",
 				"attachment;filename=\"" + new String(fileName.getBytes(), "ISO8859-1") + "\"");
+	
 		response.setContentLength((int) file.length());
+		
 		byte[] buffer = new byte[4096];// 缓冲区
-		BufferedOutputStream output = null;
+		OutputStream output = null;
 		BufferedInputStream input = null;
 		try {
-			output = new BufferedOutputStream(response.getOutputStream());
+			output = servletOutputStream;
 			input = new BufferedInputStream(new FileInputStream(file));
 			int n = -1;
 			// 遍历，开始下载
@@ -127,7 +132,7 @@ public class ProductServiceImpl implements ProductService {
 				output.write(buffer, 0, n);
 			}
 			output.flush();
-			response.flushBuffer();
+			//response.flushBuffer();
 		} catch (Exception e) {
 			// 异常自己捕捉
 		} finally {
@@ -158,50 +163,92 @@ public class ProductServiceImpl implements ProductService {
 		// 设定字体  设定标题
 		document.add(new Paragraph("2017年11月与2016年同期大白菜价格走势").setTextAlignment(TextAlignment.CENTER).setFont(font).setBold());
 		
-		
-		// 创建表格对象：
-		Table table1 = new Table(new float[]{32});
-		table1.setWidthPercent(100);
-		
-		Table table2 = new Table(new float[]{32});
-		table1.setWidthPercent(100);
-		
-		Table table3 = new Table(new float[]{32});
-		table1.setWidthPercent(100);
-		
 		// 2017数据
 		List<Product> list1 = productMapper.getProductByNameAndRelease_Time1();
-		table1.addCell(new Cell());
-		for (int i = 0; i < list1.size(); i++) {
-			table1.addCell(new Cell().add(new Paragraph(""+i)));
-		}
-		
-		table2.addCell(new Cell().add(new Paragraph("2017")));
-		for (int i = 0; i < list1.size(); i++) {
-			Product product = list1.get(i);
-			table2.addCell(new Cell().add(new Paragraph(""+product.getAverage_price())));
-		}
 		
 		// 2016年数据
 		List<Product> list2 = productMapper.getProductByNameAndRelease_Time2();
+		/*// 创建表格对象：
+		Table table1 = new Table(new float[]{list1.size()+1});
+			
+		Table table2 = new Table(new float[]{list1.size()+1});
+
+		Table table3 = new Table(new float[]{list1.size()+1});	
+	
+		table1.addCell(new Cell(1,1).add(new Paragraph("")));
+		for (int i = 0; i < list1.size(); i++) {
+			table1.addCell(new Cell(1,1).add(new Paragraph(""+(i+1))));
+		}
 		
-		table3.addCell(new Cell().add(new Paragraph("2016")));
+		table2.addCell(new Cell(1,1).add(new Paragraph("2017")));
+		for (int i = 0; i < list1.size(); i++) {
+			Product product = list1.get(i);
+			table2.addCell(new Cell(1,1).add(new Paragraph(""+product.getAverage_price())));
+		}
+		
+		
+		
+		table3.addCell(new Cell(1,1).add(new Paragraph("2016")));
 		for (int i = 0; i < list2.size(); i++) {
 			Product product = list2.get(i);
-			table3.addCell(new Cell().add(new Paragraph(""+product.getAverage_price())));
+			table3.addCell(new Cell(1,1).add(new Paragraph(""+product.getAverage_price())));
 		}
-	
-		
 		// 把表格添加到文档对象
 		document.add(table1);
 		document.add(table2);
 		document.add(table3);
+		*
+		*/
+		
+
+		float[] cellSize = new float[31];
+
+	
+
+		Table price_table = new Table(cellSize);
+
+		price_table.setMarginLeft(55f);
+
+		price_table.setAutoLayout();
+
+		for (int i = 0; i <= 92; i++) {
+
+			Cell cell = new Cell(1, 1);
+
+			if (i >= 0 && i <= 30) {
+				if (i != 0) {
+					cell.add(new Paragraph(i + ""));
+				}
+			} else if (i >= 31 && i <= 61) {
+
+				if (i == 31) {
+					cell.add(new Paragraph("2017"));
+				} else {
+
+					cell.add(new Paragraph(list1.get(i - 32).getAverage_price() + ""));
+				}
+			} else if (i >= 62 && i <= 92) {
+				if (i == 62) {
+					cell.add(new Paragraph("2016"));
+				} else {
+
+					cell.add(new Paragraph(list2.get(i - 63).getAverage_price() + ""));
+				}
+			}
+
+			price_table.addCell(cell);
+		}
+		
+		
+		document.add(price_table);
+		
+		
 		
 		// 添加图片
 		getLineJPG();
 		Image fox = new Image(ImageDataFactory.create("d:/chart/dabaicai.jpg"));		
 		document.add(fox);
-//		document.add();
+		
 		
 		// Close document
 		document.close();

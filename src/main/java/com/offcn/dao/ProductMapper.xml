@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM
 		producttwo p where p.`name` = '大白菜'
 		and p.release_date BETWEEN '2017-11-01' AND
-		'2017-11-30'
+		'2017-11-30' order by p.release_date 
 	</select>
 
 
@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		FROM
 		producttwo p where p.`name` = '大白菜'
 		and p.release_date BETWEEN '2016-11-01' AND
-		'2016-11-30'
+		'2016-11-30' order by p.release_date 
 	</select>
 
 

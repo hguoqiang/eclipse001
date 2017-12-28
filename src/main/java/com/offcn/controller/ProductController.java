@@ -84,10 +84,9 @@ public class ProductController {
 	public String getPDF(HttpServletRequest request, HttpServletResponse response){
 		
 		try {
-			productService.getPDF(request,response);
+			productService.getPDF(request,response,response.getOutputStream());
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -2,6 +2,7 @@ package com.offcn.service;
 
 import java.util.List;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +33,7 @@ public interface ProductService {
 	
 
 
-		void getPDF(HttpServletRequest request, HttpServletResponse response) throws Exception;
+		void getPDF(HttpServletRequest request, HttpServletResponse response, ServletOutputStream servletOutputStream) throws Exception;
 
 
 	
